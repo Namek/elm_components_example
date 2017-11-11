@@ -4,6 +4,7 @@ import Component1
 import Component2
 import Html exposing (Html, div, text)
 import Material
+import Misc exposing (makeLifter)
 
 
 main : Program Never Model Msg
@@ -40,10 +41,8 @@ type Msg
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     let
-        lift updateFn subUpdateFn subMsg msgType modelAccessor =
-            case updateFn subMsg msgType MsgMaterial model.mdl (modelAccessor model) of
-                ( subModel, msgs ) ->
-                    ( subUpdateFn model subModel, msgs )
+        lift =
+            makeLifter model MsgMaterial
     in
     case msg of
         MsgMaterial subMsg ->
@@ -53,9 +52,7 @@ update msg model =
             lift Component1.update (\m x -> { m | component1 = x }) subMsg MsgComponent1 .component1
 
         MsgComponent2 subMsg ->
-            case Component2.update subMsg MsgComponent2 MsgMaterial model.mdl model.component2 of
-                ( subModel, msgs ) ->
-                    ( { model | component2 = subModel }, msgs )
+            lift Component2.update (\m x -> { m | component2 = x }) subMsg MsgComponent2 .component2
 
 
 view : Model -> Html Msg
