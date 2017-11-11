@@ -39,14 +39,18 @@ type Msg
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
+    let
+        lift updateFn subUpdateFn subMsg msgType modelAccessor =
+            case updateFn subMsg msgType MsgMaterial model.mdl (modelAccessor model) of
+                ( subModel, msgs ) ->
+                    ( subUpdateFn model subModel, msgs )
+    in
     case msg of
         MsgMaterial subMsg ->
             Material.update MsgMaterial subMsg model
 
         MsgComponent1 subMsg ->
-            case Component1.update subMsg MsgComponent1 MsgMaterial model.mdl model.component1 of
-                ( subModel, msgs ) ->
-                    ( { model | component1 = subModel }, msgs )
+            lift Component1.update (\m x -> { m | component1 = x }) subMsg MsgComponent1 .component1
 
         MsgComponent2 subMsg ->
             case Component2.update subMsg MsgComponent2 MsgMaterial model.mdl model.component2 of
