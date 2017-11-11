@@ -1,5 +1,6 @@
 module Component1 exposing (Model, Msg, model, update, view)
 
+import Common exposing (ids)
 import Html exposing (Html, div, text)
 import Material
 import Material.Button as Button
@@ -33,8 +34,12 @@ view msgLifter mdlMsgLifter mdlModel model =
         [ text model.text
         , Button.render
             mdlMsgLifter
-            [ 0 ]
+            [ ids.c1Button ]
             mdlModel
-            [ Button.raised, Options.onClick (msgLifter Btn1Clicked) ]
+            [ Button.raised
+            , Button.colored
+            , Button.ripple
+            , Options.onClick (msgLifter Btn1Clicked)
+            ]
             [ text "btn1" ]
         ]

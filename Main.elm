@@ -4,6 +4,8 @@ import Component1
 import Component2
 import Html exposing (Html, div, text)
 import Material
+import Material.Color as Color
+import Material.Scheme
 import Misc exposing (makeLifter)
 
 
@@ -11,7 +13,7 @@ main : Program Never Model Msg
 main =
     Html.program
         { init = ( model, Cmd.none )
-        , view = view
+        , view = view >> Material.Scheme.topWithScheme Color.Blue Color.Red
         , subscriptions = always Sub.none
         , update = update
         }
