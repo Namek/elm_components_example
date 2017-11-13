@@ -1,8 +1,8 @@
-Example of component architecture in Elm
+# Example of component architecture in [Elm](http://elm-lang.org/)
 
-The main issue here is how to build a component-based architecture with functional approach where the only allowed state is the global state. In this situation components have to indicrectly rely on global `update` function and global `Msg` type. It's all about passing messages up and passing models down.
+The main question answered here is how to build a component-based architecture with functional approach where the only allowed state is the global state. In this situation components have to rely indirectly on global `update` function and global `Msg` type. It's all about passing messages up and passing models down.
 
-# That's it?
+## That's it?
 
 If you're looking for a more complete examples take a look at these:
 * https://github.com/simon-larsson/elm-spa-template
