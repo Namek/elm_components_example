@@ -4,6 +4,7 @@ The main issue here is how to build a component-based architecture with function
 
 # That's it?
 
-If you're looking for a more complete example take a look at those:
+If you're looking for a more complete examples take a look at these:
 * https://github.com/simon-larsson/elm-spa-template
 * https://github.com/rtfeldman/elm-spa-example
+* http://package.elm-lang.org/packages/emtenet/elm-component-support/latest
