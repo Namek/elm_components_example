@@ -14,32 +14,33 @@ type alias Model =
 
 model : Model
 model =
-    { text = "component2" }
+    { text = "component2"
+    }
 
 
 type Msg
     = Btn2Clicked
 
 
-update : Msg -> (Msg -> msg) -> (Material.Msg mdlMsg -> msg) -> Material.Model -> Model -> ( Model, Cmd msg )
-update msg msgLifter mdlMsgLifter materialModel model =
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
     case msg of
         Btn2Clicked ->
-            ( { text = "btn 2 clicked" }, Cmd.none )
+            ( { model | text = "btn 2 clicked" }, Cmd.none )
 
 
-view : (Msg -> parentMsg) -> (Material.Msg mdlMsg -> parentMsg) -> Material.Model -> Model -> Html parentMsg
-view msgLifter mdlMsgLifter mdlModel model =
+view : (Msg -> msg) -> (Material.Msg msg -> msg) -> Model -> Material.Model -> Html msg
+view lift liftMaterial model mdlModel =
     div []
         [ text model.text
         , Button.render
-            mdlMsgLifter
+            liftMaterial
             [ ids.c2Button ]
             mdlModel
             [ Button.raised
             , Button.colored
             , Button.ripple
-            , Options.onClick (msgLifter Btn2Clicked)
+            , Options.onClick (lift Btn2Clicked)
             ]
             [ text "btn1" ]
         ]

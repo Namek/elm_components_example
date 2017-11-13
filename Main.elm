@@ -6,7 +6,6 @@ import Html exposing (Html, div, text)
 import Material
 import Material.Color as Color
 import Material.Scheme
-import Misc exposing (makeLifter)
 
 
 main : Program Never Model Msg
@@ -35,32 +34,36 @@ model =
 
 
 type Msg
-    = MsgMaterial (Material.Msg Msg)
-    | MsgComponent1 Component1.Msg
+    = MsgComponent1 Component1.Msg
     | MsgComponent2 Component2.Msg
+    | MsgMaterial (Material.Msg Msg)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     let
-        lift =
-            makeLifter model MsgMaterial
+        wrap msgWrapper subMsg updateFn modelGetter modelUpdater =
+            case updateFn subMsg (modelGetter model) of
+                ( subModel, subMsgs ) ->
+                    ( modelUpdater model subModel, Cmd.map msgWrapper subMsgs )
     in
     case msg of
-        MsgMaterial subMsg ->
-            Material.update MsgMaterial subMsg model
-
         MsgComponent1 subMsg ->
-            lift Component1.update (\m x -> { m | component1 = x }) subMsg MsgComponent1 .component1
+            case Component1.update subMsg model.component1 of
+                ( subModel, subMsgs ) ->
+                    ( { model | component1 = subModel }, Cmd.map MsgComponent1 subMsgs )
 
         MsgComponent2 subMsg ->
-            lift Component2.update (\m x -> { m | component2 = x }) subMsg MsgComponent2 .component2
+            wrap MsgComponent2 subMsg Component2.update .component2 (\m x -> { m | component2 = x })
+
+        MsgMaterial subMsg ->
+            Material.update MsgMaterial subMsg model
 
 
 view : Model -> Html Msg
 view model =
     div []
         [ text "main"
-        , Component1.view MsgComponent1 MsgMaterial model.mdl model.component1
-        , Component2.view MsgComponent2 MsgMaterial model.mdl model.component2
+        , Component1.view MsgComponent1 MsgMaterial model.component1 model.mdl
+        , Component2.view MsgComponent2 MsgMaterial model.component2 model.mdl
         ]
